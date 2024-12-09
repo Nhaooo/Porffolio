@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Model Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.module.min.js';
+    import { GLTFLoader } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/loaders/GLTFLoader.min.js';
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Lighting
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+    scene.add(light);
+
+    // Load GLB file from Google Drive
+    const loader = new GLTFLoader();
+    loader.load(
+      'https://drive.google.com/uc?id=1WEgvcXwHYAbsAEQK2sZwo08Y6Or-kH_p&export=download', // Replace with your modified Google Drive URL
+      (gltf) => {
+        scene.add(gltf.scene);
+        camera.position.z = 5;
+        animate();
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading GLB file:', error);
+      }
+    );
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>
